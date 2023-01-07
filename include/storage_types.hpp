@@ -50,23 +50,23 @@ class PackageQueue : public IPackageQueue {
 public:
     PackageQueue(PackageQueueType type) : type_(type) {};
 
-    void push(Package &&) override;
+    void push(Package &&) override; //TODO: KacIwi
 
-    bool empty() const override;
+    bool empty() const override; //TODO: MarJan
 
-    size_t size() const override;
+    size_t size() const override; //TODO: MarJac
 
-    const_iterator cbegin() const override;
+    const_iterator cbegin() const override; //TODO: KacKac
 
-    const_iterator cend() const override;
+    const_iterator cend() const override; //TODO: KacIwi
 
-    const_iterator begin() const override;
+    const_iterator begin() const override; //TODO: MarJan
 
-    const_iterator end() const override;
+    const_iterator end() const override; //TODO: MarJac
 
-    Package pop() override;
+    Package pop() override; //TODO: MarJac
 
-    PackageQueueType get_queue_type() const override;
+    PackageQueueType get_queue_type() const override; //TODO: KacKac
 
 private:
     PackageQueueType type_;

@@ -10,13 +10,13 @@
 
 class Package {
 public:
-    Package();
+    Package(); //TODO: KacKac
 
     explicit Package(ElementID id) : id_(id) {};
 
     Package(Package &&package) = default;
 
-    Package& operator= (Package &&package);
+    Package&  operator= (Package &&package) noexcept;
 
     ElementID get_id() const { return id_; };
 
@@ -25,7 +25,6 @@ private:
     ElementID id_;
     static std::set<ElementID> freed_IDs;
     static std::set<ElementID> assigned_IDs;
-
 };
 
 #endif //NETSIM_PACKAGE_HPP
