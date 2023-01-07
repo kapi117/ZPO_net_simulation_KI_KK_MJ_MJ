@@ -6,5 +6,6 @@
 */
 
 using ElementID = int;
+using size_t = int;
 
 #endif //NETSIM_TYPES_HPP
