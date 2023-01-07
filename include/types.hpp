@@ -5,4 +5,6 @@
  * plik nagłówkowy "types.hpp" zawierający definicję aliasu ElementID
 */
 
+using ElementID = int;
+
 #endif //NETSIM_TYPES_HPP
