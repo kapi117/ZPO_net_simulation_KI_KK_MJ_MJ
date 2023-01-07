@@ -2,7 +2,7 @@
 #define NETSIM_STORAGE_TYPES_HPP
 
 /**
- * plik nagłówkowy "storage_types.hpp" zawierający definicje klas IPackageStockpile, IPackageQueue 
+ * plik nagłówkowy "storage_types.hpp" zawierający definicje klas IPackageStockpile, IPackageQueue
  * i PackageQueue oraz typu wyliczeniowego PackageQueueType
 */
 
