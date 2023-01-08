@@ -54,7 +54,7 @@ public:
 
     bool empty() const override; //TODO: MarJan
 
-    size_t size() const override; //TODO: MarJac
+    size_t size() const override{return queue_.size();}
 
     const_iterator cbegin() const override; //TODO: KacKac
 
@@ -62,14 +62,15 @@ public:
 
     const_iterator begin() const override; //TODO: MarJan
 
-    const_iterator end() const override; //TODO: MarJac
+    const_iterator end() const override{return queue_.cend();}
 
-    Package pop() override; //TODO: MarJac
+    Package pop() override;
 
     PackageQueueType get_queue_type() const override; //TODO: KacKac
 
 private:
     PackageQueueType type_;
+    std::list<Package> queue_;
 };
 
 #endif //NETSIM_STORAGE_TYPES_HPP
