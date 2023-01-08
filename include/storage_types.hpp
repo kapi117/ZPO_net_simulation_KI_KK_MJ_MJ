@@ -50,7 +50,7 @@ class PackageQueue : public IPackageQueue {
 public:
     PackageQueue(PackageQueueType type) : type_(type) {};
 
-    void push(Package &&) override; //TODO: KacIwi
+    void push(Package &&) override;
 
     bool empty() const override; //TODO: MarJan
 
@@ -58,7 +58,7 @@ public:
 
     const_iterator cbegin() const override; //TODO: KacKac
 
-    const_iterator cend() const override; //TODO: KacIwi
+    const_iterator cend() const override;
 
     const_iterator begin() const override; //TODO: MarJan
 
@@ -70,6 +70,7 @@ public:
 
 private:
     PackageQueueType type_;
+    std::list<Package> queue_;
 };
 
 #endif //NETSIM_STORAGE_TYPES_HPP
