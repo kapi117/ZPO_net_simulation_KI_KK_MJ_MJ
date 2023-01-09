@@ -60,7 +60,7 @@ public:
 
     const_iterator cend() const override; //TODO: KacIwi
 
-    const_iterator begin() const override; //TODO: MarJan
+    const_iterator begin() const override { return queue_.cbegin(); } //TODO: MarJan
 
     const_iterator end() const override; //TODO: MarJac
 
@@ -70,6 +70,7 @@ public:
 
 private:
     PackageQueueType type_;
+    std::list<Package> queue_;
 };
 
 #endif //NETSIM_STORAGE_TYPES_HPP
