@@ -60,7 +60,7 @@ public:
 
     const_iterator cend() const override;
 
-    const_iterator begin() const override; //TODO: MarJan
+    const_iterator begin() const override { return queue_.cbegin(); } //TODO: MarJan
 
     const_iterator end() const override{return queue_.cend();}
 
