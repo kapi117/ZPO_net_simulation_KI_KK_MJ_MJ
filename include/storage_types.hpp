@@ -56,7 +56,7 @@ public:
 
     size_t size() const override{return queue_.size();}
 
-    const_iterator cbegin() const override; //TODO: KacKac
+    const_iterator cbegin() const override { return queue_.cbegin(); };
 
     const_iterator cend() const override;
 
@@ -66,7 +66,7 @@ public:
 
     Package pop() override;
 
-    PackageQueueType get_queue_type() const override; //TODO: KacKac
+    PackageQueueType get_queue_type() const override {return type_;};
 
 private:
     PackageQueueType type_;
