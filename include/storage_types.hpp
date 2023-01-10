@@ -9,6 +9,7 @@
 #include <list>
 #include "package.hpp"
 #include "types.hpp"
+#include <cstddef>
 
 enum class PackageQueueType {
     FIFO,
@@ -36,7 +37,7 @@ public:
 
     virtual const_iterator end() const = 0;
 
-    virtual ~IPackageStockpile() = 0;
+    virtual ~IPackageStockpile() {};
 };
 
 class IPackageQueue : public IPackageStockpile {
@@ -44,6 +45,8 @@ public:
     virtual Package pop() = 0;
 
     virtual PackageQueueType get_queue_type() const = 0;
+
+    virtual ~IPackageQueue() {};
 };
 
 class PackageQueue : public IPackageQueue {
@@ -67,6 +70,8 @@ public:
     Package pop() override;
 
     PackageQueueType get_queue_type() const override {return type_;};
+
+    ~PackageQueue() override;
 
 private:
     PackageQueueType type_;

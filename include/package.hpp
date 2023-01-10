@@ -20,7 +20,7 @@ public:
 
     ElementID get_id() const { return id_; };
 
-    ~Package() = default;
+    ~Package();
 private:
     ElementID id_;
     static std::set<ElementID> freed_IDs;

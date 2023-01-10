@@ -25,3 +25,9 @@ void PackageQueue::push(Package && package) {
 IPackageStockpile::const_iterator PackageQueue::cend() const {
     return queue_.cend();
 }
+
+PackageQueue::~PackageQueue() {
+    for(auto &package : queue_){
+        package.~Package();
+    }
+}

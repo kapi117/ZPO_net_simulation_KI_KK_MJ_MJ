@@ -1,6 +1,6 @@
+//#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-TEST(test, test){
-    ASSERT_EQ(true, true);
-}
+#include "package.hpp"
+#include "types.hpp"
 

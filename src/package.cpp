@@ -1,20 +1,28 @@
 #include "package.hpp"
 
+std::set<ElementID> Package::freed_IDs;
+std::set<ElementID> Package::assigned_IDs;
+
 Package& Package::operator= (Package &&package) noexcept{
     id_ = package.id_;
     return (*this);
 }
 
 Package::Package() {
-    if (freed_IDs.empty()) {
-        if (assigned_IDs.empty()) {
-            Package(1);
+    if (Package::freed_IDs.empty()) {
+        if (Package::assigned_IDs.empty()) {
+            id_ = 1;
         } else {
-            id_ = *(assigned_IDs.rbegin()) + 1;
+            id_ = *(Package::assigned_IDs.rbegin()) + 1;
         }
     } else {
-        id_ = *freed_IDs.begin();
-        freed_IDs.erase(freed_IDs.begin());
+        id_ = *Package::freed_IDs.begin();
+        Package::freed_IDs.erase(Package::freed_IDs.begin());
     }
-    assigned_IDs.insert(id_);
+    Package::assigned_IDs.insert(id_);
+}
+
+Package::~Package() {
+    freed_IDs.insert(id_);
+    assigned_IDs.erase(id_);
 }
