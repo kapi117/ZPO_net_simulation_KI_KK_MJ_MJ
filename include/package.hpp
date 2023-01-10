@@ -10,7 +10,7 @@
 
 class Package {
 public:
-    Package(); //TODO: KacKac
+    Package();
 
     explicit Package(ElementID id) : id_(id) {};
 

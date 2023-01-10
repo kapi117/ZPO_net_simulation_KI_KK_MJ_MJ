@@ -52,21 +52,21 @@ public:
 
     void push(Package &&) override;
 
-    bool empty() const override; //TODO: MarJan
+    bool empty() const override;
 
-    size_t size() const override; //TODO: MarJac
+    size_t size() const override{return queue_.size();}
 
-    const_iterator cbegin() const override; //TODO: KacKac
+    const_iterator cbegin() const override { return queue_.cbegin(); };
 
     const_iterator cend() const override;
 
-    const_iterator begin() const override; //TODO: MarJan
+    const_iterator begin() const override { return queue_.cbegin(); }
 
-    const_iterator end() const override; //TODO: MarJac
+    const_iterator end() const override{return queue_.cend();}
 
-    Package pop() override; //TODO: MarJac
+    Package pop() override;
 
-    PackageQueueType get_queue_type() const override; //TODO: KacKac
+    PackageQueueType get_queue_type() const override {return type_;};
 
 private:
     PackageQueueType type_;

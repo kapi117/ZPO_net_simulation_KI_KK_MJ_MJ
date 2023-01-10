@@ -12,6 +12,11 @@ cmake-build-debug
 *.o
 *.obj
 
+# shitty libraries
+google_tests/lib
+cmake-build-debug
+.idea
+
 # Precompiled Headers
 *.gch
 *.pch

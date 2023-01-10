@@ -1,5 +1,15 @@
 #include "storage_types.hpp"
+bool PackageQueue::empty() const{
+    return queue_.empty();
+}
 
+Package PackageQueue::pop(){
+    Package result;
+    result = std::move(queue_.front());
+    queue_.pop_front();
+    return result;
+
+}
 
 void PackageQueue::push(Package && package) {
     switch(type_){
