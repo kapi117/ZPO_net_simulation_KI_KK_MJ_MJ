@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+#ignore google_tests/lib and google_tests/netsim_tests folders
+google_tests/lib
+
 # Compiled Object files
 *.slo
 *.lo
