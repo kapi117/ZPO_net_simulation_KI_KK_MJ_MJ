@@ -3,7 +3,7 @@
 std::set<ElementID> Package::freed_IDs;
 std::set<ElementID> Package::assigned_IDs;
 
-Package& Package::operator= (Package &&package) noexcept{
+Package &Package::operator=(Package &&package) noexcept {
     id_ = package.id_;
     return (*this);
 }

@@ -16,11 +16,12 @@ public:
 
     Package(Package &&package) = default;
 
-    Package&  operator= (Package &&package) noexcept;
+    Package &operator=(Package &&package) noexcept;
 
     ElementID get_id() const { return id_; };
 
     ~Package();
+
 private:
     ElementID id_;
     static std::set<ElementID> freed_IDs;

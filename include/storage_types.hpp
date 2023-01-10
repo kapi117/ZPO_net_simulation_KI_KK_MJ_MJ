@@ -57,19 +57,19 @@ public:
 
     bool empty() const override;
 
-    size_t size() const override{return queue_.size();}
+    size_t size() const override { return queue_.size(); }
 
     const_iterator cbegin() const override { return queue_.cbegin(); };
 
-    const_iterator cend() const override;
+    const_iterator cend() const override { return queue_.cend(); }
 
     const_iterator begin() const override { return queue_.cbegin(); }
 
-    const_iterator end() const override{return queue_.cend();}
+    const_iterator end() const override { return queue_.cend(); }
 
     Package pop() override;
 
-    PackageQueueType get_queue_type() const override {return type_;};
+    PackageQueueType get_queue_type() const override { return type_; };
 
     ~PackageQueue() override;
 

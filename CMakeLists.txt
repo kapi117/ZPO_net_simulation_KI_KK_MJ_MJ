@@ -21,15 +21,6 @@ set(SOURCE_FILES
         src/storage_types.cpp
         )
 
-# Ustaw zmienną `HEADER_FILES`, która będzie przechowywać ścieżki do
-# tych plików nagłówkowych, które będą niezbędne w każdej konfiguracji.
-set(HEADER_FILES
-        include/types.hpp
-        include/storage_types.hpp
-        include/package.hpp
-        )
-
-add_library(include STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
 # Dodaj konfigurację typu `Debug`.
 add_executable(netsim_debug ${SOURCE_FILES} main.cpp)
@@ -59,4 +50,3 @@ add_subdirectory(google_tests/lib)
 # Podlinkuj bibliotekę o identyfikatorze `gmock` (w pliku CMake) wyłącznie do konkretnej
 # konfiguracji (tu: `Test`).
 target_link_libraries(netsim_test gmock)
-target_link_libraries(netsim_test gtest)

@@ -1,9 +1,10 @@
 #include "storage_types.hpp"
-bool PackageQueue::empty() const{
+
+bool PackageQueue::empty() const {
     return queue_.empty();
 }
 
-Package PackageQueue::pop(){
+Package PackageQueue::pop() {
     Package result;
     result = std::move(queue_.front());
     queue_.pop_front();
@@ -11,8 +12,8 @@ Package PackageQueue::pop(){
 
 }
 
-void PackageQueue::push(Package && package) {
-    switch(type_){
+void PackageQueue::push(Package &&package) {
+    switch (type_) {
         case PackageQueueType::LIFO:
             queue_.push_front(std::move(package));
             break;
@@ -22,12 +23,8 @@ void PackageQueue::push(Package && package) {
     }
 }
 
-IPackageStockpile::const_iterator PackageQueue::cend() const {
-    return queue_.cend();
-}
-
 PackageQueue::~PackageQueue() {
-    for(auto &package : queue_){
+    for (auto &package: queue_) {
         package.~Package();
     }
 }
