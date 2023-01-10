@@ -16,7 +16,11 @@ public:
 
     Package(Package &&package) = default;
 
+    Package(Package &package) = delete;
+
     Package &operator=(Package &&package) noexcept;
+
+    Package &operator=(Package &package) = delete;
 
     ElementID get_id() const { return id_; };
 
