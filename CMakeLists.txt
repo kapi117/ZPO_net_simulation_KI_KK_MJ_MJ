@@ -32,6 +32,7 @@ add_executable(netsim_debug ${SOURCE_FILES} main.cpp)
 set(SOURCES_FILES_TESTS
         google_tests/netsim_test.cpp
         google_tests/netsim_tests/test/test_package.cpp
+        google_tests/netsim_tests/test/test_storage_types.cpp
         )
 # Dodaj konfigurację typu `Test`.
 add_executable(netsim_test ${SOURCE_FILES} ${SOURCES_FILES_TESTS} google_tests/netsim_tests/test/main_gtest.cpp)
