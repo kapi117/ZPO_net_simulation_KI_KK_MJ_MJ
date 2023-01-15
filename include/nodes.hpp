@@ -6,6 +6,7 @@
 #define NETSIM_NODES_HPP
 
 #include <memory>
+#include <utility>
 #include <vector>
 #include <optional>
 #include <map>
@@ -69,11 +70,11 @@ public:
     using preferences_t = std::map<IPackageReceiver *, double>;
     using const_iterator = preferences_t::const_iterator;
 
-    ReceiverPreferences(ProbabilityGenerator generator = probability_generator) : generator_(generator) {};
+    ReceiverPreferences(ProbabilityGenerator generator = probability_generator) : generator_(std::move(generator)) {};
 
-    void add_receiver(IPackageReceiver *receiver); // TODO: KacIwi
+    void add_receiver(IPackageReceiver *receiver);
 
-    void remove_receiver(IPackageReceiver *receiver); // TODO: KacIwi
+    void remove_receiver(IPackageReceiver *receiver);
 
     const_iterator begin() const { return preferences_.begin(); }
 
@@ -90,7 +91,7 @@ public:
      *
      * @return wskaźnik na odbiorcę
      */
-    IPackageReceiver *choose_receiver(); // TODO: KacIwi
+    IPackageReceiver *choose_receiver();
 
     const preferences_t &get_preferences() const { return preferences_; };
 
