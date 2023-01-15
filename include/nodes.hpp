@@ -183,7 +183,7 @@ public:
 
 private:
     TimeOffset pd_;
-    Time package_processing_start_time_;
+    Time package_processing_start_time_ = 0;
     std::unique_ptr<IPackageQueue> package_queue_;
 };
 
