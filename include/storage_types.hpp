@@ -16,10 +16,11 @@ enum class PackageQueueType {
     LIFO
 };
 
-/*!
- * IPackageStockpile
- */
+
 class IPackageStockpile {
+    /*!
+     * klasa IPackageStockpile jest klasą abstrakcyjną, która zawiera metody do obsługi magazynu paczek
+     */
 public:
     using const_iterator = std::list<Package>::const_iterator;
 
@@ -41,6 +42,13 @@ public:
 };
 
 class IPackageQueue : public IPackageStockpile {
+    /*!
+     * IPackageQueue
+     * - klasa abstrakcyjna, która dziedziczy po IPackageStockpile (umożliwia obsługę magazynu paczek)
+     * - zawiera metodę pop() - usuwa pierwszy element z kolejki i zwraca go
+     * - służy jako interfejs dla klasy PackageQueue
+     * - umożliwia dodawania i usuwanie elementów z kolejki (dla Worker)
+     */
 public:
     virtual Package pop() = 0;
 
@@ -50,6 +58,15 @@ public:
 };
 
 class PackageQueue : public IPackageQueue {
+    /*!
+     * PackageQueue
+     * - klasa dziedzicząca po IPackageQueue
+     * - zawiera prywatne pole typu PackageQueueType - określa typ kolejki (FIFO lub LIFO)
+     * - zawiera prywatne pole typu std::list<Package> - przechowuje paczki
+     * - zawiera konstruktor, który przyjmuje jako argument typ kolejki
+     * - zawiera metody push() i pop() - dodają i usuwają elementy z kolejki
+     * - służy do obsługi kolejek paczek u robotników
+     */
 public:
     PackageQueue(PackageQueueType type) : type_(type) {};
 

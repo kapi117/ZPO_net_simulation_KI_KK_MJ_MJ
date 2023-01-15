@@ -5,8 +5,11 @@
  * plik nagłówkowy "types.hpp" zawierający definicję aliasu ElementID
 */
 #include <list>
+#include <functional>
 
 using ElementID = int;
-// using size_t = int;
+using Time = int;
+using TimeOffset = int;
+using ProbabilityGenerator = std::function<double()>;
 
 #endif //NETSIM_TYPES_HPP
