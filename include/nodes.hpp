@@ -122,8 +122,8 @@ protected:
      * @brief Przekazywanie paczki do bufora. Usuwa paczkę z kolejki paczek i wrzuca ją do bufora
      * @param p - paczka do przekazania
      */
-    void push_package(Package &&p);
-    std::optional<Package>& sending_buffer_ = buffer;
+    void push_package(Package &&p); // TODO: MarJac
+    std::optional<Package> &sending_buffer_ = buffer;
 };
 
 class Ramp : public PackageSender {
@@ -151,6 +151,12 @@ private:
 };
 
 class Worker : public IPackageReceiver, public PackageSender {
+    /**
+     * Klasa Worker reprezentuje pracownika, który może odbierać paczki i wysyłać je do kolejnego odbiorcy.
+     * @field pd_ - czas przetwarzania paczki
+     * @field package_processing_start_ - czas rozpoczęcia przetwarzania paczki
+     * @field package_queue_ - kolejka paczek
+     */
 public:
     Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> packageQueue) : pd_(pd) {
         id_ = id;
@@ -164,6 +170,12 @@ public:
      * @param t - bieżący czas symulacji
      */
     void do_work(Time t); // TODO: KacKac
+
+    /**
+     * @brief Metoda receive_package() pozwala pracownikowi odebrać paczkę.
+     * @param p - paczka do odebrania
+     */
+    void receive_package(Package &&p) override { package_queue_->push(std::move(p)); }
 
     TimeOffset get_processing_duration() const { return pd_; };
 
