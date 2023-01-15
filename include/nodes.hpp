@@ -14,6 +14,7 @@
 #include "types.hpp"
 #include "helpers.hpp"
 
+extern std::optional<Package> buffer;
 
 class IPackageReceiver {
     /**
@@ -98,6 +99,8 @@ class PackageSender {
 public:
     PackageSender(PackageSender &&) = default;
 
+    PackageSender() {};
+
     /**
      * @brief Metoda send_package() wysyła paczkę z bufora do odbiorcy
      */
@@ -116,7 +119,7 @@ protected:
      * @param p - paczka do przekazania
      */
     void push_package(Package &&p);
-    std::optional<Package>& sending_buffer_;
+    std::optional<Package>& sending_buffer_ = buffer;
 };
 
 class Ramp : public PackageSender {
