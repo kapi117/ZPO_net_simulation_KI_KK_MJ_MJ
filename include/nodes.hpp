@@ -47,6 +47,10 @@ public:
         stockpile_ = std::move(ptr);
     };
 
+    void receive_package(Package &&p) override {
+        stockpile_->push(std::move(p));
+    }
+
 private:
     std::unique_ptr<IPackageStockpile> stockpile_;
 };
@@ -67,9 +71,9 @@ public:
 
     ReceiverPreferences(ProbabilityGenerator generator = probability_generator) : generator_(generator) {};
 
-    void add_receiver(IPackageReceiver *receiver);
+    void add_receiver(IPackageReceiver *receiver); // TODO: KacIwi
 
-    void remove_receiver(IPackageReceiver *receiver);
+    void remove_receiver(IPackageReceiver *receiver); // TODO: KacIwi
 
     const_iterator begin() const { return preferences_.begin(); }
 
@@ -86,7 +90,7 @@ public:
      *
      * @return wskaźnik na odbiorcę
      */
-    IPackageReceiver *choose_receiver();
+    IPackageReceiver *choose_receiver(); // TODO: KacIwi
 
     const preferences_t &get_preferences() const { return preferences_; };
 
@@ -104,7 +108,7 @@ public:
     /**
      * @brief Metoda send_package() wysyła paczkę z bufora do odbiorcy
      */
-    void send_package();
+    void send_package(); // TODO: MarJac
 
     /**
      * @brief Metoda get_sending_buffer() zwraca odnośnik na odbiorcę
@@ -132,7 +136,7 @@ public:
      * (na podstawie argumentu di typu TimeOffset przekazanego w konstruktorze klasy Ramp reprezentującego okres pomiędzy dostawami).
      * @param t - bieżący czas symulacji
      */
-    void deliver_goods(Time t);
+    void deliver_goods(Time t); // TODO: MarJan
 
     TimeOffset get_delivery_interval() const { return di_; };
 
@@ -159,7 +163,7 @@ public:
      * Na początku ustawia package_processing_start_time_ na bieżący czas symulacji, w celu odliczania czasu.
      * @param t - bieżący czas symulacji
      */
-    void do_work(Time t);
+    void do_work(Time t); // TODO: KacKac
 
     TimeOffset get_processing_duration() const { return pd_; };
 
