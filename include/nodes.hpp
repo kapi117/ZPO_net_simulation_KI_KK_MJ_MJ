@@ -6,6 +6,7 @@
 #define NETSIM_NODES_HPP
 
 #include <memory>
+#include <utility>
 #include <vector>
 #include <optional>
 #include <map>
@@ -14,7 +15,12 @@
 #include "types.hpp"
 #include "helpers.hpp"
 
-extern std::optional<Package> buffer;
+extern const std::optional<Package> buffer;
+
+enum class ReceiverType {
+    WORKER,
+    STOREHOUSE
+};
 
 class IPackageReceiver {
     /**
@@ -33,6 +39,8 @@ public:
 
     virtual IPackageStockpile::const_iterator cend() const = 0;
 
+    virtual ReceiverType get_receiver_type() const = 0;
+
     virtual ~IPackageReceiver() = default;
 
 protected:
@@ -46,6 +54,8 @@ public:
         id_ = id;
         stockpile_ = std::move(ptr);
     };
+
+    ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; }
 
     void receive_package(Package &&p) override {
         stockpile_->push(std::move(p));
@@ -69,11 +79,11 @@ public:
     using preferences_t = std::map<IPackageReceiver *, double>;
     using const_iterator = preferences_t::const_iterator;
 
-    ReceiverPreferences(ProbabilityGenerator generator = probability_generator) : generator_(generator) {};
+    ReceiverPreferences(ProbabilityGenerator generator = probability_generator) : generator_(std::move(generator)) {};
 
-    void add_receiver(IPackageReceiver *receiver); // TODO: KacIwi
+    void add_receiver(IPackageReceiver *receiver);
 
-    void remove_receiver(IPackageReceiver *receiver); // TODO: KacIwi
+    void remove_receiver(IPackageReceiver *receiver);
 
     const_iterator begin() const { return preferences_.begin(); }
 
@@ -90,7 +100,7 @@ public:
      *
      * @return wskaźnik na odbiorcę
      */
-    IPackageReceiver *choose_receiver(); // TODO: KacIwi
+    IPackageReceiver *choose_receiver();
 
     const preferences_t &get_preferences() const { return preferences_; };
 
@@ -103,7 +113,7 @@ class PackageSender {
 public:
     PackageSender(PackageSender &&) = default;
 
-    PackageSender() {};
+    PackageSender() = default;
 
     /**
      * @brief Metoda send_package() wysyła paczkę z bufora do odbiorcy
@@ -111,10 +121,10 @@ public:
     void send_package(); // TODO: MarJac
 
     /**
-     * @brief Metoda get_sending_buffer() zwraca odnośnik na odbiorcę
-     * @return referencja na odbiorcę
+     * @brief Metoda get_sending_buffer() zwraca odnośnik na paczkę
+     * @return referencja na paczkę
      */
-    std::optional<Package> &get_sending_buffer() { return sending_buffer_; };
+    const std::optional<Package> &get_sending_buffer() const { return sending_buffer_; };
 
     ReceiverPreferences receiver_preferences_;
 protected:
@@ -122,8 +132,8 @@ protected:
      * @brief Przekazywanie paczki do bufora. Usuwa paczkę z kolejki paczek i wrzuca ją do bufora
      * @param p - paczka do przekazania
      */
-    void push_package(Package &&p); // TODO: MarJac
-    std::optional<Package> &sending_buffer_ = buffer;
+    void push_package(Package &&p) { sending_buffer_ = std::move(p); }; // TODO: MarJac
+    std::optional<Package> sending_buffer_;
 };
 
 class Ramp : public PackageSender {
@@ -162,6 +172,8 @@ public:
         id_ = id;
         package_queue_ = std::move(packageQueue);
     };
+
+    ReceiverType get_receiver_type() const override { return ReceiverType::WORKER; };
 
     /**
      * @brief Metoda do_work() wywoływana jest przez symulację, w punkcie "Przetworzenie".

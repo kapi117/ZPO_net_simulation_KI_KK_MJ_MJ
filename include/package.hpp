@@ -12,15 +12,15 @@ class Package {
 public:
     Package();
 
-    explicit Package(ElementID id) : id_(id) {};
+    Package(ElementID id) : id_(id) {};
 
     Package(Package &&package) = default;
 
-    Package(Package &package) = delete;
+    Package(const Package &package) = delete;
 
     Package &operator=(Package &&package) noexcept;
 
-    Package &operator=(Package &package) = delete;
+    Package &operator=(const Package &package) = delete;
 
     ElementID get_id() const { return id_; };
 
