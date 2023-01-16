@@ -15,7 +15,7 @@
 #include "types.hpp"
 #include "helpers.hpp"
 
-extern std::optional<Package> buffer;
+extern const std::optional<Package> buffer;
 
 enum class ReceiverType {
     WORKER,
@@ -113,7 +113,7 @@ class PackageSender {
 public:
     PackageSender(PackageSender &&) = default;
 
-    PackageSender() {};
+    PackageSender() = default;
 
     /**
      * @brief Metoda send_package() wysyła paczkę z bufora do odbiorcy
@@ -121,10 +121,10 @@ public:
     void send_package(); // TODO: MarJac
 
     /**
-     * @brief Metoda get_sending_buffer() zwraca odnośnik na odbiorcę
-     * @return referencja na odbiorcę
+     * @brief Metoda get_sending_buffer() zwraca odnośnik na paczkę
+     * @return referencja na paczkę
      */
-    std::optional<Package> &get_sending_buffer() { return sending_buffer_; };
+    const std::optional<Package> &get_sending_buffer() const { return sending_buffer_; };
 
     ReceiverPreferences receiver_preferences_;
 protected:
@@ -132,8 +132,8 @@ protected:
      * @brief Przekazywanie paczki do bufora. Usuwa paczkę z kolejki paczek i wrzuca ją do bufora
      * @param p - paczka do przekazania
      */
-    void push_package(Package &&p); // TODO: MarJac
-    std::optional<Package> &sending_buffer_ = buffer;
+    void push_package(Package &&p) { sending_buffer_ = std::move(p); }; // TODO: MarJac
+    std::optional<Package> sending_buffer_;
 };
 
 class Ramp : public PackageSender {

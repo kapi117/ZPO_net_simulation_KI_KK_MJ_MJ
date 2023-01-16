@@ -31,3 +31,13 @@ void ReceiverPreferences::remove_receiver(IPackageReceiver *receiver) {
         pref.second = prob;
     }
 }
+
+void PackageSender::send_package() {
+    if (sending_buffer_.has_value()) {
+        auto receiver = receiver_preferences_.choose_receiver();
+        if (receiver != nullptr) {
+            receiver->receive_package(std::move(sending_buffer_.value()));
+            sending_buffer_.reset();
+        }
+    }
+}
