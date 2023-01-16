@@ -13,6 +13,7 @@ IPackageReceiver *ReceiverPreferences::choose_receiver() {
             return receiver.first;
         }
     }
+    return nullptr;
 }
 
 void ReceiverPreferences::add_receiver(IPackageReceiver *receiver) {

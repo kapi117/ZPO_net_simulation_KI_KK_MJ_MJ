@@ -17,6 +17,11 @@
 
 extern std::optional<Package> buffer;
 
+enum class ReceiverType {
+    WORKER,
+    STOREHOUSE
+};
+
 class IPackageReceiver {
     /**
      * Interfejs dla obiektów, które mogą odbierać paczki (Worker, Storehouse)
@@ -34,6 +39,8 @@ public:
 
     virtual IPackageStockpile::const_iterator cend() const = 0;
 
+    virtual ReceiverType get_receiver_type() const = 0;
+
     virtual ~IPackageReceiver() = default;
 
 protected:
@@ -47,6 +54,8 @@ public:
         id_ = id;
         stockpile_ = std::move(ptr);
     };
+
+    ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; }
 
     void receive_package(Package &&p) override {
         stockpile_->push(std::move(p));
@@ -163,6 +172,8 @@ public:
         id_ = id;
         package_queue_ = std::move(packageQueue);
     };
+
+    ReceiverType get_receiver_type() const override { return ReceiverType::WORKER; };
 
     /**
      * @brief Metoda do_work() wywoływana jest przez symulację, w punkcie "Przetworzenie".
