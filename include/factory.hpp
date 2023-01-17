@@ -78,18 +78,18 @@ public:
 
     NodeCollection<Storehouse>::const_iterator storehouse_cend() const { return storehouses_.cend(); }
 
-    bool is_consistent() const;
+    bool is_consistent() const; // TODO: KacIwi
 
-    void do_deliveries(Time t);
+    void do_deliveries(Time t); // TODO: MarJac
 
-    void do_package_passing();
+    void do_package_passing(); // TODO: MarJan
 
-    void do_work(Time t);
+    void do_work(Time t); // TODO: KacKac
 
 private:
 
     template<class Node>
-    void remove_receiver(NodeCollection<Node> &collection, ElementID id);
+    void remove_receiver(NodeCollection<Node> &collection, ElementID id); // TODO: MarJac
 
     NodeCollection<Ramp> ramps_;
     NodeCollection<Worker> workers_;
