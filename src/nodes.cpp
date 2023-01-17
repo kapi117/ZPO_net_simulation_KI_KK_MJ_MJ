@@ -46,24 +46,19 @@ void PackageSender::send_package() {
 }
 
 void Worker::do_work(Time t) {
-    if(sending_buffer_.has_value()) {
-        if (package_processing_start_time_ + pd_ == t) {
-            send_package();
-            package_processing_start_time_ = 0;
-        }
-    } else {
-        if (not package_queue_->empty()) {
-            push_package(package_queue_->pop());
-            if (package_processing_start_time_ == 0) {
-                package_processing_start_time_ = t;
-            }
-        }
+    if(!current_package_.has_value() && !package_queue_->empty()){
+        current_package_ = package_queue_->pop();
+        package_processing_start_time_ = t;
+    }
+    if(package_processing_start_time_+pd_ == t+1){
+        push_package(std::move(current_package_.value()));
+        current_package_.reset();
+        package_processing_start_time_ = 0;
     }
 }
 
 void Ramp::deliver_goods(Time t) {
-    // Ewentualnie t - 1
-    if (t % di_ == 0) {
+    if ((t-1) % di_ == 0) {
         push_package(Package());
     }
 }

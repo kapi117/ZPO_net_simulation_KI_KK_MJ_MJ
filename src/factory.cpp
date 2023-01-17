@@ -6,7 +6,7 @@
 
 template<class Node>
 void NodeCollection<Node>::add(Node &&node) {
-    nodes_.emplace_back(node);
+    nodes_.push_back(std::move(node));
 }
 
 template<class Node>
@@ -42,5 +42,20 @@ void Factory::remove_receiver(NodeCollection<Node> &collection, ElementID id){
 void Factory::do_deliveries(Time t) {
     for (auto &ramp: ramps_) {
         ramp.deliver_goods(t);
+    }
+}
+
+void Factory::do_work(Time t) {
+    for (auto &worker : workers_) {
+        worker.do_work(t);
+    }
+}
+
+void Factory::do_package_passing() {
+    for (auto &ramp : ramps_) {
+        ramp.send_package();
+    }
+    for (auto &worker : workers_) {
+        worker.send_package();
     }
 }
