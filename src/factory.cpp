@@ -34,10 +34,9 @@ template NodeCollection<Storehouse>::const_iterator NodeCollection<Storehouse>::
 template<class Node>
 void NodeCollection<Node>::remove_by_id(ElementID id) {
     auto it = find_by_id(id);
-    if (it == nodes_.end()) {
-        throw std::logic_error("Node not found");
+    if (it != nodes_.end()) {
+        nodes_.erase(it);
     }
-    nodes_.erase(it);
 }
 
 template void NodeCollection<Ramp>::remove_by_id(ElementID id);
@@ -95,7 +94,7 @@ bool is_storehouse_achievable(const PackageSender *node, std::map<const PackageS
     node_states[node] = NodeState::kVisited;
 
     if (node->receiver_preferences_.get_preferences().empty()) {
-        throw;
+        throw std::logic_error("No receivers");
     }
 
     bool has_receiver = false;
@@ -119,7 +118,7 @@ bool is_storehouse_achievable(const PackageSender *node, std::map<const PackageS
     node_states[node] = NodeState::kFinished;
 
     if (!has_receiver) {
-        throw;
+        throw std::logic_error("No receiver");
     }
     return true;
 }
