@@ -6,7 +6,7 @@
 
 template<class Node>
 void NodeCollection<Node>::add(Node &&node) {
-    nodes_.emplace_back(node);
+    nodes_.push_back(std::move(node));
 }
 
 template<class Node>

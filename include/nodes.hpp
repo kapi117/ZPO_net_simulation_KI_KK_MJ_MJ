@@ -5,6 +5,7 @@
 #ifndef NETSIM_NODES_HPP
 #define NETSIM_NODES_HPP
 
+#include "config.hpp"
 #include <memory>
 #include <utility>
 #include <vector>
@@ -39,7 +40,9 @@ public:
 
     virtual IPackageStockpile::const_iterator cend() const = 0;
 
+#if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
     virtual ReceiverType get_receiver_type() const = 0;
+#endif
 
     virtual ~IPackageReceiver() = default;
 
@@ -55,7 +58,9 @@ public:
         stockpile_ = std::move(ptr);
     };
 
+#if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
     ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; }
+#endif
 
     void receive_package(Package &&p) override {
         stockpile_->push(std::move(p));
@@ -191,7 +196,17 @@ public:
         package_queue_ = std::move(packageQueue);
     };
 
+    IPackageStockpile::const_iterator begin() const override { return package_queue_->begin(); }
+
+    IPackageStockpile::const_iterator end() const override { return package_queue_->end(); }
+
+    IPackageStockpile::const_iterator cbegin() const override { return package_queue_->cbegin(); }
+
+    IPackageStockpile::const_iterator cend() const override { return package_queue_->cend(); }
+
+#if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
     ReceiverType get_receiver_type() const override { return ReceiverType::WORKER; };
+#endif
 
     /**
      * @brief Metoda do_work() wywoływana jest przez symulację, w punkcie "Przetworzenie".
