@@ -80,7 +80,7 @@ public:
 
     bool is_consistent() const; // TODO: KacIwi
 
-    void do_deliveries(Time t); // TODO: MarJac
+    void do_deliveries(Time t);
 
     void do_package_passing(); // TODO: MarJan
 
