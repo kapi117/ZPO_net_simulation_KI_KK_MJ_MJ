@@ -43,7 +43,7 @@ void PackageSender::send_package() {
 }
 
 void Worker::do_work(Time t) {
-    if(!sending_buffer_.has_value()) {
+    if(sending_buffer_.has_value()) {
         if (package_processing_start_time_ + pd_ == t) {
             send_package();
             package_processing_start_time_ = 0;
