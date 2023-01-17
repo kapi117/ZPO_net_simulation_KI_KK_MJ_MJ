@@ -27,3 +27,17 @@ void NodeCollection<Node>::remove_by_id(ElementID id) {
     }
     nodes_.erase(it);
 }
+
+void Factory::remove_receiver(IPackageReceiver &receiver, ElementID id) {
+    auto it = receiver.find_by_id(id);
+    if (it == receiver.end()) {
+        throw std::logic_error("Node not found");
+    }
+    receiver.remove_by_id(id);
+}
+
+void Factory::do_deliveries(Time t) {
+    for (auto &ramp: ramps_) {
+        ramp.deliver_goods(t);
+    }
+}
