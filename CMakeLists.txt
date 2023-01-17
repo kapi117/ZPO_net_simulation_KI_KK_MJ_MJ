@@ -41,6 +41,7 @@ set(SOURCES_FILES_TESTS
 # Dodaj konfigurację typu `Test`.
 add_executable(netsim_test ${SOURCE_FILES} ${SOURCES_FILES_TESTS} google_tests/netsim_tests/test/main_gtest.cpp)
 
+target_compile_definitions(netsim_test PUBLIC EXERCISE_ID=EXERCISE_ID_FACTORY)
 # Dodaj katalogi z plikami nagłówkowymi wyłącznie do konkretnej konfiguracji (tu: `Test`).
 target_include_directories(netsim_test PUBLIC
         google_tests/lib/googletest/include
