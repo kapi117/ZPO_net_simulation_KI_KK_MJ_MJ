@@ -215,6 +215,8 @@ private:
     TimeOffset pd_;
     Time package_processing_start_time_ = 0;
     std::unique_ptr<IPackageQueue> package_queue_;
+
+    std::optional<Package> current_package_ = std::nullopt;
 };
 
 #endif //NETSIM_NODES_HPP

@@ -27,3 +27,10 @@ void NodeCollection<Node>::remove_by_id(ElementID id) {
     }
     nodes_.erase(it);
 }
+
+void Factory::do_work(Time t) {
+    for (auto &worker : workers_) {
+        worker.do_work(t);
+    }
+}
+
