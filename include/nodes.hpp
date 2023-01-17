@@ -6,6 +6,7 @@
 #define NETSIM_NODES_HPP
 
 #include <memory>
+#include <utility>
 #include <vector>
 #include <optional>
 #include <map>
@@ -14,6 +15,12 @@
 #include "types.hpp"
 #include "helpers.hpp"
 
+extern const std::optional<Package> buffer;
+
+enum class ReceiverType {
+    WORKER,
+    STOREHOUSE
+};
 
 class IPackageReceiver {
     /**
@@ -32,6 +39,8 @@ public:
 
     virtual IPackageStockpile::const_iterator cend() const = 0;
 
+    virtual ReceiverType get_receiver_type() const = 0;
+
     virtual ~IPackageReceiver() = default;
 
 protected:
@@ -45,6 +54,12 @@ public:
         id_ = id;
         stockpile_ = std::move(ptr);
     };
+
+    ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; }
+
+    void receive_package(Package &&p) override {
+        stockpile_->push(std::move(p));
+    }
 
 private:
     std::unique_ptr<IPackageStockpile> stockpile_;
@@ -64,7 +79,7 @@ public:
     using preferences_t = std::map<IPackageReceiver *, double>;
     using const_iterator = preferences_t::const_iterator;
 
-    ReceiverPreferences(ProbabilityGenerator generator = probability_generator) : generator_(generator) {};
+    ReceiverPreferences(ProbabilityGenerator generator = probability_generator) : generator_(std::move(generator)) {};
 
     void add_receiver(IPackageReceiver *receiver);
 
@@ -98,16 +113,18 @@ class PackageSender {
 public:
     PackageSender(PackageSender &&) = default;
 
+    PackageSender() = default;
+
     /**
      * @brief Metoda send_package() wysyła paczkę z bufora do odbiorcy
      */
-    void send_package();
+    void send_package(); // TODO: MarJac
 
     /**
-     * @brief Metoda get_sending_buffer() zwraca odnośnik na odbiorcę
-     * @return referencja na odbiorcę
+     * @brief Metoda get_sending_buffer() zwraca odnośnik na paczkę
+     * @return referencja na paczkę
      */
-    std::optional<Package> &get_sending_buffer() { return sending_buffer_; };
+    const std::optional<Package> &get_sending_buffer() const { return sending_buffer_; };
 
     ReceiverPreferences receiver_preferences_;
 protected:
@@ -115,8 +132,8 @@ protected:
      * @brief Przekazywanie paczki do bufora. Usuwa paczkę z kolejki paczek i wrzuca ją do bufora
      * @param p - paczka do przekazania
      */
-    void push_package(Package &&p);
-    std::optional<Package>& sending_buffer_;
+    void push_package(Package &&p) { sending_buffer_ = std::move(p); }; // TODO: MarJac
+    std::optional<Package> sending_buffer_;
 };
 
 class Ramp : public PackageSender {
@@ -129,7 +146,7 @@ public:
      * (na podstawie argumentu di typu TimeOffset przekazanego w konstruktorze klasy Ramp reprezentującego okres pomiędzy dostawami).
      * @param t - bieżący czas symulacji
      */
-    void deliver_goods(Time t);
+    void deliver_goods(Time t); // TODO: MarJan
 
     TimeOffset get_delivery_interval() const { return di_; };
 
@@ -144,11 +161,19 @@ private:
 };
 
 class Worker : public IPackageReceiver, public PackageSender {
+    /**
+     * Klasa Worker reprezentuje pracownika, który może odbierać paczki i wysyłać je do kolejnego odbiorcy.
+     * @field pd_ - czas przetwarzania paczki
+     * @field package_processing_start_ - czas rozpoczęcia przetwarzania paczki
+     * @field package_queue_ - kolejka paczek
+     */
 public:
     Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> packageQueue) : pd_(pd) {
         id_ = id;
         package_queue_ = std::move(packageQueue);
     };
+
+    ReceiverType get_receiver_type() const override { return ReceiverType::WORKER; };
 
     /**
      * @brief Metoda do_work() wywoływana jest przez symulację, w punkcie "Przetworzenie".
@@ -156,7 +181,13 @@ public:
      * Na początku ustawia package_processing_start_time_ na bieżący czas symulacji, w celu odliczania czasu.
      * @param t - bieżący czas symulacji
      */
-    void do_work(Time t);
+    void do_work(Time t); // TODO: KacKac
+
+    /**
+     * @brief Metoda receive_package() pozwala pracownikowi odebrać paczkę.
+     * @param p - paczka do odebrania
+     */
+    void receive_package(Package &&p) override { package_queue_->push(std::move(p)); }
 
     TimeOffset get_processing_duration() const { return pd_; };
 
