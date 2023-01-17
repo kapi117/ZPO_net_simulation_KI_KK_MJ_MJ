@@ -50,7 +50,7 @@ void Worker::do_work(Time t) {
         current_package_ = package_queue_->pop();
         package_processing_start_time_ = t;
     }
-    if(package_processing_start_time_+pd_ == t){
+    if(package_processing_start_time_+pd_ == t+1){
         push_package(std::move(current_package_.value()));
         current_package_.reset();
         package_processing_start_time_ = 0;

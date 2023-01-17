@@ -16,8 +16,6 @@
 #include "types.hpp"
 #include "helpers.hpp"
 
-extern const std::optional<Package> buffer;
-
 enum class ReceiverType {
     WORKER,
     STOREHOUSE
