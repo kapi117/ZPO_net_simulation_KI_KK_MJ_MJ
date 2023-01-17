@@ -44,7 +44,7 @@ class Factory {
 public:
     void add_ramp(Ramp &&ramp) { ramps_.add(std::move(ramp)); }
 
-    void remove_ramp(ElementID id) { remove_receiver(ramps_, id);};
+    void remove_ramp(ElementID id) { ramps_.remove_by_id(id); };
 
     NodeCollection<Ramp>::iterator find_ramp_by_id(ElementID id) { return ramps_.find_by_id(id); }
 

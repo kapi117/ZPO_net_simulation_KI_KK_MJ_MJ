@@ -9,15 +9,27 @@ void NodeCollection<Node>::add(Node &&node) {
     nodes_.push_back(std::move(node));
 }
 
+template void NodeCollection<Ramp>::add(Ramp &&ramp);
+template void NodeCollection<Worker>::add(Worker &&worker);
+template void NodeCollection<Storehouse>::add(Storehouse &&sender);
+
 template<class Node>
 typename NodeCollection<Node>::iterator NodeCollection<Node>::find_by_id(ElementID id) {
     return std::find_if(nodes_.begin(), nodes_.end(), [&id](const Node &node) { return node.get_id() == id; });
 }
 
+template NodeCollection<Ramp>::iterator NodeCollection<Ramp>::find_by_id(ElementID id);
+template NodeCollection<Worker>::iterator NodeCollection<Worker>::find_by_id(ElementID id);
+template NodeCollection<Storehouse>::iterator NodeCollection<Storehouse>::find_by_id(ElementID id);
+
 template<class Node>
 typename NodeCollection<Node>::const_iterator NodeCollection<Node>::find_by_id(ElementID id) const {
     return std::find_if(nodes_.begin(), nodes_.end(), [&id](const Node &node) { return node.get_id() == id; });
 }
+
+template NodeCollection<Ramp>::const_iterator NodeCollection<Ramp>::find_by_id(ElementID id) const;
+template NodeCollection<Worker>::const_iterator NodeCollection<Worker>::find_by_id(ElementID id) const;
+template NodeCollection<Storehouse>::const_iterator NodeCollection<Storehouse>::find_by_id(ElementID id) const;
 
 template<class Node>
 void NodeCollection<Node>::remove_by_id(ElementID id) {
@@ -28,17 +40,26 @@ void NodeCollection<Node>::remove_by_id(ElementID id) {
     nodes_.erase(it);
 }
 
+template void NodeCollection<Ramp>::remove_by_id(ElementID id);
+template void NodeCollection<Worker>::remove_by_id(ElementID id);
+template void NodeCollection<Storehouse>::remove_by_id(ElementID id);
+
 template<class Node>
 void Factory::remove_receiver(NodeCollection<Node> &collection, ElementID id) {
-    Node removed = collection.find_by_id(id);
+    auto removed = collection.find_by_id(id);
+    IPackageReceiver *receiver = dynamic_cast<IPackageReceiver *>(&(*removed));
     for (auto &worker: workers_) {
-        worker.receiver_preferences_.remove_receiver(removed);
+        worker.receiver_preferences_.remove_receiver(receiver);
     }
     for (auto &ramp: ramps_) {
-        ramp.receiver_preferences_.remove_receiver(removed);
+        ramp.receiver_preferences_.remove_receiver(receiver);
     }
     collection.remove_by_id(id);
 }
+
+template void Factory::remove_receiver(NodeCollection<Worker> &collection, ElementID id);
+template void Factory::remove_receiver(NodeCollection<Storehouse> &collection, ElementID id);
+
 
 void Factory::do_deliveries(Time t) {
     for (auto &ramp: ramps_) {
