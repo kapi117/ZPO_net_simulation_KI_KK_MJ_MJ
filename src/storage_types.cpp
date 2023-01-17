@@ -5,8 +5,7 @@ bool PackageQueue::empty() const {
 }
 
 Package PackageQueue::pop() {
-    Package result;
-    result = std::move(queue_.front());
+    Package result(std::move(queue_.front()));
     queue_.pop_front();
     return result;
 

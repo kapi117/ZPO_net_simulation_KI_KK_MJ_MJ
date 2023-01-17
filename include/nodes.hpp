@@ -5,6 +5,7 @@
 #ifndef NETSIM_NODES_HPP
 #define NETSIM_NODES_HPP
 
+#include "config.hpp"
 #include <memory>
 #include <utility>
 #include <vector>
@@ -14,8 +15,6 @@
 #include "storage_types.hpp"
 #include "types.hpp"
 #include "helpers.hpp"
-
-extern const std::optional<Package> buffer;
 
 enum class ReceiverType {
     WORKER,
@@ -39,7 +38,9 @@ public:
 
     virtual IPackageStockpile::const_iterator cend() const = 0;
 
+#if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
     virtual ReceiverType get_receiver_type() const = 0;
+#endif
 
     virtual ~IPackageReceiver() = default;
 
@@ -55,10 +56,28 @@ public:
         stockpile_ = std::move(ptr);
     };
 
+#if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
     ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; }
+#endif
 
     void receive_package(Package &&p) override {
         stockpile_->push(std::move(p));
+    }
+
+    IPackageStockpile::const_iterator begin() const override {
+        return stockpile_->begin();
+    }
+
+    IPackageStockpile::const_iterator end() const override {
+        return stockpile_->end();
+    }
+
+    IPackageStockpile::const_iterator cbegin() const override {
+        return stockpile_->cbegin();
+    }
+
+    IPackageStockpile::const_iterator cend() const override {
+        return stockpile_->cend();
     }
 
 private:
@@ -104,6 +123,8 @@ public:
 
     const preferences_t &get_preferences() const { return preferences_; };
 
+    void set_preferences(preferences_t preferences) { preferences_ = std::move(preferences); };
+
 private:
     ProbabilityGenerator generator_;
     preferences_t preferences_;
@@ -118,7 +139,7 @@ public:
     /**
      * @brief Metoda send_package() wysyła paczkę z bufora do odbiorcy
      */
-    void send_package(); // TODO: MarJac
+    void send_package();
 
     /**
      * @brief Metoda get_sending_buffer() zwraca odnośnik na paczkę
@@ -132,8 +153,8 @@ protected:
      * @brief Przekazywanie paczki do bufora. Usuwa paczkę z kolejki paczek i wrzuca ją do bufora
      * @param p - paczka do przekazania
      */
-    void push_package(Package &&p) { sending_buffer_ = std::move(p); }; // TODO: MarJac
-    std::optional<Package> sending_buffer_;
+    void push_package(Package &&p) { sending_buffer_ = std::move(p); };
+    std::optional<Package> sending_buffer_ = std::nullopt;
 };
 
 class Ramp : public PackageSender {
@@ -146,7 +167,7 @@ public:
      * (na podstawie argumentu di typu TimeOffset przekazanego w konstruktorze klasy Ramp reprezentującego okres pomiędzy dostawami).
      * @param t - bieżący czas symulacji
      */
-    void deliver_goods(Time t); // TODO: MarJan
+    void deliver_goods(Time t);
 
     TimeOffset get_delivery_interval() const { return di_; };
 
@@ -173,7 +194,17 @@ public:
         package_queue_ = std::move(packageQueue);
     };
 
+    IPackageStockpile::const_iterator begin() const override { return package_queue_->begin(); }
+
+    IPackageStockpile::const_iterator end() const override { return package_queue_->end(); }
+
+    IPackageStockpile::const_iterator cbegin() const override { return package_queue_->cbegin(); }
+
+    IPackageStockpile::const_iterator cend() const override { return package_queue_->cend(); }
+
+#if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
     ReceiverType get_receiver_type() const override { return ReceiverType::WORKER; };
+#endif
 
     /**
      * @brief Metoda do_work() wywoływana jest przez symulację, w punkcie "Przetworzenie".
@@ -181,7 +212,7 @@ public:
      * Na początku ustawia package_processing_start_time_ na bieżący czas symulacji, w celu odliczania czasu.
      * @param t - bieżący czas symulacji
      */
-    void do_work(Time t); // TODO: KacKac
+    void do_work(Time t);
 
     /**
      * @brief Metoda receive_package() pozwala pracownikowi odebrać paczkę.
@@ -195,8 +226,10 @@ public:
 
 private:
     TimeOffset pd_;
-    Time package_processing_start_time_;
+    Time package_processing_start_time_ = 0;
     std::unique_ptr<IPackageQueue> package_queue_;
+
+    std::optional<Package> current_package_ = std::nullopt;
 };
 
 #endif //NETSIM_NODES_HPP

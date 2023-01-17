@@ -78,7 +78,7 @@ public:
 
     NodeCollection<Storehouse>::const_iterator storehouse_cend() const { return storehouses_.cend(); }
 
-    bool is_consistent() const;
+    bool is_consistent() const; // TODO: KacIwi
 
     void do_deliveries(Time t);
 
@@ -89,7 +89,7 @@ public:
 private:
 
     template<class Node>
-    void remove_receiver(NodeCollection<Node> &collection, ElementID id);
+    void remove_receiver(NodeCollection<Node> &collection, ElementID id); // TODO: MarJac
 
     NodeCollection<Ramp> ramps_;
     NodeCollection<Worker> workers_;
