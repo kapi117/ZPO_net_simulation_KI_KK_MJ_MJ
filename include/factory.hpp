@@ -82,9 +82,9 @@ public:
 
     void do_deliveries(Time t); // TODO: MarJac
 
-    void do_package_passing(); // TODO: MarJan
+    void do_package_passing();
 
-    void do_work(Time t); // TODO: KacKac
+    void do_work(Time t);
 
 private:
 

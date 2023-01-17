@@ -27,3 +27,18 @@ void NodeCollection<Node>::remove_by_id(ElementID id) {
     }
     nodes_.erase(it);
 }
+
+void Factory::do_work(Time t) {
+    for (auto &worker : workers_) {
+        worker.do_work(t);
+    }
+}
+
+void Factory::do_package_passing() {
+    for (auto &ramp : ramps_) {
+        ramp.send_package();
+    }
+    for (auto &worker : workers_) {
+        worker.send_package();
+    }
+}
