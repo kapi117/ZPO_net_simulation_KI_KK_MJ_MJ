@@ -61,6 +61,22 @@ public:
         stockpile_->push(std::move(p));
     }
 
+    IPackageStockpile::const_iterator begin() const override {
+        return stockpile_->begin();
+    }
+
+    IPackageStockpile::const_iterator end() const override {
+        return stockpile_->end();
+    }
+
+    IPackageStockpile::const_iterator cbegin() const override {
+        return stockpile_->cbegin();
+    }
+
+    IPackageStockpile::const_iterator cend() const override {
+        return stockpile_->cend();
+    }
+
 private:
     std::unique_ptr<IPackageStockpile> stockpile_;
 };
@@ -104,6 +120,8 @@ public:
 
     const preferences_t &get_preferences() const { return preferences_; };
 
+    void set_preferences(preferences_t preferences) { preferences_ = std::move(preferences); };
+
 private:
     ProbabilityGenerator generator_;
     preferences_t preferences_;
@@ -118,7 +136,7 @@ public:
     /**
      * @brief Metoda send_package() wysyła paczkę z bufora do odbiorcy
      */
-    void send_package(); // TODO: MarJac
+    void send_package();
 
     /**
      * @brief Metoda get_sending_buffer() zwraca odnośnik na paczkę
@@ -132,8 +150,8 @@ protected:
      * @brief Przekazywanie paczki do bufora. Usuwa paczkę z kolejki paczek i wrzuca ją do bufora
      * @param p - paczka do przekazania
      */
-    void push_package(Package &&p) { sending_buffer_ = std::move(p); }; // TODO: MarJac
-    std::optional<Package> sending_buffer_;
+    void push_package(Package &&p) { sending_buffer_ = std::move(p); };
+    std::optional<Package> sending_buffer_ = std::nullopt;
 };
 
 class Ramp : public PackageSender {
@@ -146,7 +164,7 @@ public:
      * (na podstawie argumentu di typu TimeOffset przekazanego w konstruktorze klasy Ramp reprezentującego okres pomiędzy dostawami).
      * @param t - bieżący czas symulacji
      */
-    void deliver_goods(Time t); // TODO: MarJan
+    void deliver_goods(Time t);
 
     TimeOffset get_delivery_interval() const { return di_; };
 
@@ -181,7 +199,7 @@ public:
      * Na początku ustawia package_processing_start_time_ na bieżący czas symulacji, w celu odliczania czasu.
      * @param t - bieżący czas symulacji
      */
-    void do_work(Time t); // TODO: KacKac
+    void do_work(Time t);
 
     /**
      * @brief Metoda receive_package() pozwala pracownikowi odebrać paczkę.

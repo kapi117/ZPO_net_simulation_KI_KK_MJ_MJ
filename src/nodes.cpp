@@ -2,6 +2,7 @@
 // Created by Hyperbook on 15.01.2023.
 //
 
+#include <stdexcept>
 #include "nodes.hpp"
 
 IPackageReceiver *ReceiverPreferences::choose_receiver() {
@@ -13,7 +14,7 @@ IPackageReceiver *ReceiverPreferences::choose_receiver() {
             return receiver.first;
         }
     }
-    return nullptr;
+    throw std::logic_error("No receiver chosen");
 }
 
 void ReceiverPreferences::add_receiver(IPackageReceiver *receiver) {
@@ -25,10 +26,12 @@ void ReceiverPreferences::add_receiver(IPackageReceiver *receiver) {
 }
 
 void ReceiverPreferences::remove_receiver(IPackageReceiver *receiver) {
-    preferences_.erase(receiver);
-    double prob = 1.0 / preferences_.size();
-    for (auto &pref : preferences_) {
-        pref.second = prob;
+    if (preferences_.find(receiver) != preferences_.end()) {
+        preferences_.erase(receiver);
+        double prob = 1.0 / preferences_.size();
+        for (auto &pref: preferences_) {
+            pref.second = prob;
+        }
     }
 }
 
@@ -55,5 +58,12 @@ void Worker::do_work(Time t) {
                 package_processing_start_time_ = t;
             }
         }
+    }
+}
+
+void Ramp::deliver_goods(Time t) {
+    // Ewentualnie t - 1
+    if (t % di_ == 0) {
+        push_package(Package());
     }
 }
