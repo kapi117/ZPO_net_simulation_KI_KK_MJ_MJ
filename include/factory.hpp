@@ -78,7 +78,7 @@ public:
 
     NodeCollection<Storehouse>::const_iterator storehouse_cend() const { return storehouses_.cend(); }
 
-    bool is_consistent() const; // TODO: KacIwi
+    bool is_consistent() const;
 
     void do_deliveries(Time t);
 
@@ -89,12 +89,58 @@ public:
 private:
 
     template<class Node>
-    void remove_receiver(NodeCollection<Node> &collection, ElementID id); // TODO: MarJac
+    void remove_receiver(NodeCollection<Node> &collection, ElementID id);
 
     NodeCollection<Ramp> ramps_;
     NodeCollection<Worker> workers_;
     NodeCollection<Storehouse> storehouses_;
 
 };
+
+enum class ElementType {
+    RAMP,
+    WORKER,
+    STOREHOUSE,
+    LINK
+};
+
+struct ParsedLineData {
+    ElementType type;
+    std::map<std::string, std::string> data;
+};
+
+const std::map<std::string, ElementType> ELEMENT_TYPE_NAMES = {
+        {"LOADING_RAMP", ElementType::RAMP},
+        {"WORKER", ElementType::WORKER},
+        {"STOREHOUSE", ElementType::STOREHOUSE},
+        {"LINK", ElementType::LINK}
+};
+
+const std::map<ElementType, std::vector<std::string>> REQUIRED_FIELDS = {
+        {ElementType::RAMP, {"id", "delivery-interval"}},
+        {ElementType::WORKER, {"id", "processing-time", "queue-type"}},
+        {ElementType::STOREHOUSE, {"id"}},
+        {ElementType::LINK, {"src", "dest"}}
+};
+
+const std::map<std::string, PackageQueueType> QUEUE_TYPE_NAMES = {
+        {"FIFO", PackageQueueType::FIFO},
+        {"LIFO", PackageQueueType::LIFO}
+};
+
+/**
+ * @brief Parsuje linię (odczytuje dane i zwraca je w postaci struktury składającej się z typu i mapy danych)
+ * @note Linia przyjmuje poniższy format: \n
+ * TAG {key=pair}xN \n
+ * gdzie TAG to jeden z czterech możliwych typów elementów (LOADING_RAMP, WORKER, STOREHOUSE, LINK), przykładowo: \n
+ * LOADING_RAMP id=1 delivery-interval=3
+ * @param line Linia do przetworzenia
+ * @return ParsedLineData struct z danymi
+ */
+ParsedLineData parse_line(const std::string &line);
+
+Factory load_factory_structure(std::istream &is);
+
+void save_factory_structure(const Factory &factory, const std::ostream &os);
 
 #endif //NETSIM_FACTORY_HPP

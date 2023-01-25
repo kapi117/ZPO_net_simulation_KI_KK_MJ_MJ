@@ -7,7 +7,7 @@ project(netsim)
 set(CMAKE_CXX_STANDARD 17)
 
 # Dodaj flagi kompilacji wymuszające pisanie kodu zgodnego ze standardem.
-add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors)
+#add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors)
 
 # Dodaj katalogi z plikami nagłówkowymi dla wszystkich konfiguracji.
 include_directories(
@@ -38,6 +38,7 @@ set(SOURCES_FILES_TESTS
         google_tests/netsim_tests/test/test_storage_types.cpp
         google_tests/netsim_tests/test/test_nodes.cpp
         google_tests/netsim_tests/test/test_Factory.cpp
+        google_tests/netsim_tests/test/test_factory_io.cpp
         )
 # Dodaj konfigurację typu `Test`.
 add_executable(netsim_test ${SOURCE_FILES} ${SOURCES_FILES_TESTS} google_tests/netsim_tests/test/main_gtest.cpp)

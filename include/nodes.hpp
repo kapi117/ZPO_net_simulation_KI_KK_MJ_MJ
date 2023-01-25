@@ -224,6 +224,8 @@ public:
 
     Time get_package_processing_start_time() const { return package_processing_start_time_; };
 
+    IPackageQueue* get_queue() const { return package_queue_.get(); };
+
 private:
     TimeOffset pd_;
     Time package_processing_start_time_ = 0;
