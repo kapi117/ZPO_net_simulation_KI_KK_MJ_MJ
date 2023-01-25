@@ -128,6 +128,10 @@ const std::map<std::string, PackageQueueType> QUEUE_TYPE_NAMES = {
         {"LIFO", PackageQueueType::LIFO}
 };
 
+const std::map<ReceiverType, std::string> RECEIVER_TYPE_NAMES = {
+        {ReceiverType::WORKER, "worker"},
+        {ReceiverType::STOREHOUSE, "storehouse"}
+};
 /**
  * @brief Parsuje linię (odczytuje dane i zwraca je w postaci struktury składającej się z typu i mapy danych)
  * @note Linia przyjmuje poniższy format: \n
@@ -141,6 +145,6 @@ ParsedLineData parse_line(const std::string &line);
 
 Factory load_factory_structure(std::istream &is);
 
-void save_factory_structure(const Factory &factory, const std::ostream &os);
+void save_factory_structure(const Factory &factory, std::ostream &os);
 
 #endif //NETSIM_FACTORY_HPP

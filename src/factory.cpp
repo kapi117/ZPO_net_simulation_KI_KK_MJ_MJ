@@ -297,6 +297,75 @@ Factory load_factory_structure(std::istream &is) {
     return factory;
 }
 
-void save_factory_structure(const Factory &factory, const std::ostream &os) {
+std::vector<std::string> get_receivers_string_list(ReceiverPreferences::const_iterator begin,
+                                                   ReceiverPreferences::const_iterator end) {
+    std::vector<std::string> receivers;
+    std::for_each(begin, end, [&receivers](const auto &receiver) {
+        receivers.push_back(RECEIVER_TYPE_NAMES.at(receiver.first->get_receiver_type()) + " #" +
+                            std::to_string(receiver.first->get_id()));
+    });
+    std::sort(receivers.begin(), receivers.end());
+    return receivers;
+}
 
+void save_factory_structure(const Factory &factory, std::ostream &os) {
+    os << "\n" << "== LOADING RAMPS ==" << "\n";
+    std::vector<std::string> ramp_lines;
+    std::for_each(factory.ramp_cbegin(), factory.ramp_cend(), [&ramp_lines](const auto &ramp) {
+        std::ostringstream oss;
+        oss << "LOADING RAMP #" << ramp.get_id() << "\n  Delivery interval: " << ramp.get_delivery_interval() << "\n";
+        std::vector<std::string> receivers = get_receivers_string_list(ramp.receiver_preferences_.cbegin(),
+                                                                       ramp.receiver_preferences_.cend());
+        oss << "  Receivers:\n";
+        for (const auto &receiver: receivers) {
+            oss << "    " << receiver << "\n";
+        }
+        ramp_lines.push_back(oss.str());
+    });
+
+    std::sort(ramp_lines.begin(), ramp_lines.end());
+    for (const auto &line: ramp_lines) {
+        os << line;
+    }
+
+    os << "\n" << "== WORKERS ==" << "\n";
+    std::vector<std::string> worker_lines;
+    std::for_each(factory.worker_cbegin(), factory.worker_cend(), [&worker_lines](const auto &worker) {
+        std::ostringstream oss;
+        oss << "WORKER #" << worker.get_id() << "\n  Processing time: " << worker.get_processing_duration() << "\n";
+
+        std::string queue_name;
+        for (const auto &it: QUEUE_TYPE_NAMES)
+            if (it.second == worker.get_queue()->get_queue_type())
+                queue_name = it.first;
+        oss << "  Queue type: " << queue_name << "\n";
+
+        std::vector<std::string> receivers = get_receivers_string_list(worker.receiver_preferences_.cbegin(),
+                                                                       worker.receiver_preferences_.cend());
+        oss << "  Receivers:\n";
+        for (const auto &receiver: receivers) {
+            oss << "    " << receiver << "\n";
+        }
+        worker_lines.push_back(oss.str());
+    });
+
+    std::sort(worker_lines.begin(), worker_lines.end());
+    for (const auto &line: worker_lines) {
+        os << line;
+    }
+
+    os << "\n" << "== STOREHOUSES ==" << "\n";
+    std::vector<std::string> storehouse_lines;
+    std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(), [&storehouse_lines](const auto &storehouse) {
+        std::ostringstream oss;
+        oss << "STOREHOUSE #" << storehouse.get_id() << "\n";
+        storehouse_lines.push_back(oss.str());
+    });
+
+    std::sort(storehouse_lines.begin(), storehouse_lines.end());
+    for (const auto &line: storehouse_lines) {
+        os << line;
+    }
+
+    os.flush();
 }
