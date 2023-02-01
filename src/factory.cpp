@@ -309,6 +309,82 @@ std::vector<std::string> get_receivers_string_list(ReceiverPreferences::const_it
 }
 
 void save_factory_structure(const Factory &factory, std::ostream &os) {
+    std::vector<std::string> links;
+
+    os << "\n" << "; == LOADING RAMPS ==" << "\n\n";
+    std::vector<std::string> ramp_lines;
+    std::for_each(factory.ramp_cbegin(), factory.ramp_cend(), [&ramp_lines, &links](const auto &ramp) {
+        std::ostringstream oss;
+        oss << "LOADING_RAMP id=" << ramp.get_id() << " delivery-interval=" << ramp.get_delivery_interval() << "\n";
+        ramp_lines.push_back(oss.str());
+        std::for_each(ramp.receiver_preferences_.cbegin(), ramp.receiver_preferences_.cend(),
+                      [&ramp, &links](const auto &receiver) {
+                          std::ostringstream receiver_oss;
+                          receiver_oss << "LINK src=ramp" << "-" << ramp.get_id() << " dest="
+                                       << RECEIVER_TYPE_NAMES_IO.at(receiver.first->get_receiver_type()) << "-"
+                                       << receiver.first->get_id() << "\n";
+                          links.push_back(receiver_oss.str());
+                      });
+
+    });
+
+    std::sort(ramp_lines.begin(), ramp_lines.end());
+    for (const auto &line: ramp_lines) {
+        os << line;
+    }
+
+    os << "\n" << "; == WORKERS ==" << "\n\n";
+    std::vector<std::string> worker_lines;
+    std::for_each(factory.worker_cbegin(), factory.worker_cend(), [&worker_lines, &links](const auto &worker) {
+        std::string queue_name;
+        for (const auto &it: QUEUE_TYPE_NAMES)
+            if (it.second == worker.get_queue()->get_queue_type())
+                queue_name = it.first;
+
+        std::ostringstream oss;
+        oss << "WORKER id=" << worker.get_id() << " processing-time=" << worker.get_processing_duration() << " queue-type=" << queue_name << "\n";
+        worker_lines.push_back(oss.str());
+
+        std::for_each(worker.receiver_preferences_.cbegin(), worker.receiver_preferences_.cend(),
+                      [&worker, &links](const auto &receiver) {
+                          std::ostringstream receiver_oss;
+                          receiver_oss << "LINK src=worker" << "-" << worker.get_id() << " dest="
+                                       << RECEIVER_TYPE_NAMES_IO.at(receiver.first->get_receiver_type()) << "-"
+                                       << receiver.first->get_id() << "\n";
+                          links.push_back(receiver_oss.str());
+                      });
+    });
+
+    std::sort(worker_lines.begin(), worker_lines.end());
+    for (const auto &line: worker_lines) {
+        os << line;
+    }
+
+    os << "\n" << "; == STOREHOUSES ==" << "\n\n";
+    std::vector<std::string> storehouse_lines;
+    std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(), [&storehouse_lines](const auto &storehouse) {
+        std::ostringstream oss;
+        oss << "STOREHOUSE id=" << storehouse.get_id() << "\n";
+        storehouse_lines.push_back(oss.str());
+    });
+
+    std::sort(storehouse_lines.begin(), storehouse_lines.end());
+    for (const auto &line: storehouse_lines) {
+        os << line;
+    }
+
+    os << "\n" << "; == LINKS ==" << "\n";
+    std::sort(links.begin(), links.end());
+    for (const auto &line: links) {
+        os << line;
+    }
+
+    os.flush();
+}
+
+/** RAPORT **/
+/*
+ * void save_factory_structure(const Factory &factory, std::ostream &os) {
     os << "\n" << "== LOADING RAMPS ==" << "\n";
     std::vector<std::string> ramp_lines;
     std::for_each(factory.ramp_cbegin(), factory.ramp_cend(), [&ramp_lines](const auto &ramp) {
@@ -369,3 +445,4 @@ void save_factory_structure(const Factory &factory, std::ostream &os) {
 
     os.flush();
 }
+ */

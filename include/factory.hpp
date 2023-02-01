@@ -132,6 +132,11 @@ const std::map<ReceiverType, std::string> RECEIVER_TYPE_NAMES = {
         {ReceiverType::WORKER, "worker"},
         {ReceiverType::STOREHOUSE, "storehouse"}
 };
+
+const std::map<ReceiverType, std::string> RECEIVER_TYPE_NAMES_IO = {
+        {ReceiverType::WORKER, "worker"},
+        {ReceiverType::STOREHOUSE, "store"}
+};
 /**
  * @brief Parsuje linię (odczytuje dane i zwraca je w postaci struktury składającej się z typu i mapy danych)
  * @note Linia przyjmuje poniższy format: \n
